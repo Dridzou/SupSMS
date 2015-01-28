@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:text="Save contacts"
         android:id="@+id/button"
-        android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="98dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
