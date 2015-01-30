@@ -1,7 +1,9 @@
 package com.example.hugo.supsms;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
+import android.os.StrictMode;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -10,7 +12,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 //TEST
 
 public class MainActivity extends ActionBarActivity {
@@ -19,41 +38,48 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Button view = (Button)findViewById(R.id.button);
-
-        view.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v){
-                displayContacts();
-                Log.i("NativeContentProvider", "Completed Displaying Contact list");
-            }
-        });
-    }
-
-    private void displayContacts() {
-        System.out.println("Testouille");
-        ContentResolver cr = getContentResolver();
-        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-        if (cur.getCount() > 0) {
-            while (cur.moveToNext()) {
-                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                if (Integer.parseInt(cur.getString(
-                        cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                    Cursor pCur = cr.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
-                            new String[]{id}, null);
-                    while (pCur.moveToNext()) {
-                        String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        System.out.println("Name: " + name + ", Phone No: " + phoneNo);
-                    }
-                    pCur.close();
-                }
-            }
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
         }
+        //ca passe
+        Button button = (Button)findViewById(R.id.buttonLogin);
+        button.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        HttpClient httpClient = new DefaultHttpClient();
+                        HttpPost httpPost = new HttpPost("http://91.121.105.200/API/");
+                        try {
+                            // Add your data
+
+                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                            nameValuePairs.add(new BasicNameValuePair("action", "login"));
+                            nameValuePairs.add(new BasicNameValuePair("login", ((EditText)findViewById(R.id.loginName)).getText().toString()));
+                            nameValuePairs.add(new BasicNameValuePair("password",((EditText)findViewById(R.id.loginPassword)).getText().toString()));
+                            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                            System.out.println("test2");
+                            // Execute HTTP Post Request
+                            HttpResponse httpResponse = httpClient.execute(httpPost);
+                            System.out.println("test");
+
+                            String response = null;
+                            HttpEntity httpEntity = null;
+                            httpEntity = httpResponse.getEntity();
+                            response = EntityUtils.toString(httpEntity);
+                            System.out.println(response);
+
+
+                        } catch (ClientProtocolException e) {
+                            // TODO Auto-generated catch block
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                        }
+                    }
+                }
+        );
     }
+
+
 
 
     @Override
