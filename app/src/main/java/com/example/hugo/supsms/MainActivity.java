@@ -25,6 +25,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -67,12 +68,24 @@ public class MainActivity extends ActionBarActivity {
                             httpEntity = httpResponse.getEntity();
                             response = EntityUtils.toString(httpEntity);
                             System.out.println(response);
+                            // Convert String to json object
+                            JSONObject json = null;
+                            try {
+                                json = new JSONObject(response);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            assert json != null;
+                            String str_value=json.getString("success");
+                            System.out.println(str_value);
 
 
                         } catch (ClientProtocolException e) {
                             // TODO Auto-generated catch block
                         } catch (IOException e) {
                             // TODO Auto-generated catch block
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
