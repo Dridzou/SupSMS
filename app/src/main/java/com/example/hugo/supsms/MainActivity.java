@@ -29,11 +29,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-//TEST
 
 public class MainActivity extends ActionBarActivity {
+
+    //Pour désactiver la possiblité de retourner sur la page de menu en appuyant
+    // sur la touche "back" quand on doit se loger
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,52 +50,63 @@ public class MainActivity extends ActionBarActivity {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        //ca passe
+
         Button button = (Button)findViewById(R.id.buttonLogin);
+        final EditText loginName = (EditText)findViewById(R.id.loginName);
+        final EditText loginPassword = (EditText)findViewById(R.id.loginPassword);
+
         button.setOnClickListener(
-                new Button.OnClickListener() {
-                    public void onClick(View v) {
-                        HttpClient httpClient = new DefaultHttpClient();
-                        HttpPost httpPost = new HttpPost("http://91.121.105.200/API/");
+            new Button.OnClickListener() {
+                public void onClick(View v) {
+                    HttpClient httpClient = new DefaultHttpClient();
+                    HttpPost httpPost = new HttpPost("http://91.121.105.200/API/");
+                    GlobalClass.getInstance().userLogin = ((EditText)findViewById(R.id.loginName)).getText().toString();
+                    GlobalClass.getInstance().userPassword = ((EditText)findViewById(R.id.loginPassword)).getText().toString();
+                    try {
+                        // Add your data
+                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                        nameValuePairs.add(new BasicNameValuePair("action", "login"));
+                        nameValuePairs.add(new BasicNameValuePair("login", GlobalClass.getInstance().userLogin));
+                        nameValuePairs.add(new BasicNameValuePair("password", GlobalClass.getInstance().userPassword));
+                        httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                        // Execute HTTP Post Request
+                        HttpResponse httpResponse = httpClient.execute(httpPost);
+
+                        String response = null;
+                        HttpEntity httpEntity = null;
+                        httpEntity = httpResponse.getEntity();
+                        response = EntityUtils.toString(httpEntity);
+                        System.out.println(response);
+                        // Convert String to json object
+                        JSONObject json = null;
                         try {
-                            // Add your data
-
-                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                            nameValuePairs.add(new BasicNameValuePair("action", "login"));
-                            nameValuePairs.add(new BasicNameValuePair("login", ((EditText)findViewById(R.id.loginName)).getText().toString()));
-                            nameValuePairs.add(new BasicNameValuePair("password",((EditText)findViewById(R.id.loginPassword)).getText().toString()));
-                            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                            System.out.println("test2");
-                            // Execute HTTP Post Request
-                            HttpResponse httpResponse = httpClient.execute(httpPost);
-                            System.out.println("test");
-
-                            String response = null;
-                            HttpEntity httpEntity = null;
-                            httpEntity = httpResponse.getEntity();
-                            response = EntityUtils.toString(httpEntity);
-                            System.out.println(response);
-                            // Convert String to json object
-                            JSONObject json = null;
-                            try {
-                                json = new JSONObject(response);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            assert json != null;
-                            String str_value=json.getString("success");
-                            System.out.println(str_value);
-
-
-                        } catch (ClientProtocolException e) {
-                            // TODO Auto-generated catch block
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
+                            json = new JSONObject(response);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        assert json != null;
+                        String str_value=json.getString("success");
+                        System.out.println(str_value);
+
+                        if (str_value == "true") {
+                            Intent myIntent = new Intent(MainActivity.this, MenuActivity.class);
+                            startActivity(myIntent);
+                        }
+                        else {
+                            loginName.setText("");
+                            loginPassword.setText("");
+                        }
+
+
+                    } catch (ClientProtocolException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
+            }
         );
     }
 
