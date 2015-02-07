@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="313dp"
+            android:layout_height="wrap_content"
+            android:text="SupSMS is an app that allows an user to save his SMS and contacts."
+            android:id="@+id/textView3"
+            android:gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="33dp" />
+
+        <TextView
+            android:layout_width="313dp"
+            android:layout_height="wrap_content"
+            android:text="An user can log in with his username and his password."
+            android:id="@+id/textView5"
+            android:gravity="center"
+            android:layout_marginTop="25dp"
+            android:layout_below="@+id/textView3"
+            android:layout_alignStart="@+id/textView3" />
+
+        <TextView
+            android:layout_width="313dp"
+            android:layout_height="wrap_content"
+            android:text="When an user is authenticated, he can save all his SMS by using the &quot;Backup SMS&quot; button or he can save his contacts with the &quot;Backup Contact&quot; button."
+            android:id="@+id/textView6"
+            android:gravity="center"
+            android:layout_below="@+id/textView5"
+            android:layout_alignStart="@+id/textView5"
+            android:layout_marginTop="23dp" />
+
+        <TextView
+            android:layout_width="313dp"
+            android:layout_height="wrap_content"
+            android:text="He can log out when he wants with the &quot;Logout&quot; button."
+            android:id="@+id/textView7"
+            android:gravity="center"
+            android:layout_below="@+id/textView6"
+            android:layout_alignStart="@+id/textView6"
+            android:layout_marginTop="26dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="©2015 SupSMS"
+            android:id="@+id/textView8"
+            android:layout_marginBottom="58dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Adrien VINATIER | Hugo FAYOLLE"
+            android:id="@+id/textView9"
+            android:layout_alignTop="@+id/textView8"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="29dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Maxime RAULD | Romain ORIOL"
+            android:id="@+id/textView10"
+            android:layout_below="@+id/textView9"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+</LinearLayout>

@@ -43,8 +43,8 @@ public class MenuActivity extends ActionBarActivity {
         buttonBUSMS.setOnClickListener(
             new Button.OnClickListener() {
                 public void onClick(View v) {
-                    //Intent myIntent = new Intent(MenuActivity.this, ContactsActivity.class);
-                    //startActivityForResult(myIntent, 0);
+                    Intent myIntent = new Intent(MenuActivity.this, SMSActivity.class);
+                    startActivityForResult(myIntent, 0);
                 }
             }
         );
@@ -61,8 +61,8 @@ public class MenuActivity extends ActionBarActivity {
         buttonAbout.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        //Intent myIntent = new Intent(MenuActivity.this, AboutActivity.class);
-                        //startActivityForResult(myIntent, 0);
+                        Intent myIntent = new Intent(MenuActivity.this, AboutActivity.class);
+                        startActivityForResult(myIntent, 0);
                     }
                 }
         );

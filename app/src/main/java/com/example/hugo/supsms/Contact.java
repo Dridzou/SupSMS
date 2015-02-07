@@ -4,39 +4,40 @@ package com.example.hugo.supsms;
  * Created by Hugo on 04/02/2015.
  */
 public class Contact {
-    public Integer id;
-    public String name;
-    public String email;
-    public String phoneNumber;
 
-    public Contact(Integer id, String name, String phoneNumber, String email) {
-        this.id = id;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
+    public Integer _ID;
+    public String DNAME;
+    public String EMAIL;
+    public String PNUMBER;
+
+    public Contact(Integer _ID, String DNAME, String PNUMBER, String EMAIL) {
+        this._ID = _ID;
+        this.DNAME = DNAME;
+        this.PNUMBER = PNUMBER;
+        this.EMAIL = EMAIL;
     }
 
-    public String getName() {
-        return name;
+    public String getDNAME() {
+        return DNAME;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDNAME(String DNAME) {
+        this.DNAME = DNAME;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEMAIL() {
+        return EMAIL;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEMAIL(String EMAIL) {
+        this.EMAIL = EMAIL;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPNUMBER() {
+        return PNUMBER;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPNUMBER(String PNUMBER) {
+        this.PNUMBER = PNUMBER;
     }
 }

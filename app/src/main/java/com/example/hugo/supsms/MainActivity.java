@@ -72,10 +72,8 @@ public class MainActivity extends ActionBarActivity {
                         // Execute HTTP Post Request
                         HttpResponse httpResponse = httpClient.execute(httpPost);
 
-                        String response = null;
-                        HttpEntity httpEntity = null;
-                        httpEntity = httpResponse.getEntity();
-                        response = EntityUtils.toString(httpEntity);
+                        HttpEntity httpEntity = httpResponse.getEntity();
+                        String response = EntityUtils.toString(httpEntity);
                         System.out.println(response);
                         // Convert String to json object
                         JSONObject json = null;
@@ -93,6 +91,7 @@ public class MainActivity extends ActionBarActivity {
                             startActivity(myIntent);
                         }
                         else {
+                            Toast.makeText(getApplicationContext(), "Bad credentials !", Toast.LENGTH_LONG).show();
                             loginName.setText("");
                             loginPassword.setText("");
                         }
