@@ -69,7 +69,7 @@ public class ContactsActivity extends ActionBarActivity {
             }
         );
 
-
+        //Infos part
         Boolean boolCheckInfosCount;
         Gson gson = new Gson();
         ArrayList<Contact> contactList = new ArrayList();
@@ -78,33 +78,42 @@ public class ContactsActivity extends ActionBarActivity {
                         new String[]{ContactsContract.CommonDataKinds.Phone._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER}, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
         boolCheckInfosCount = contactInfosCursor.getCount() > 0;
 
-        //emails
-        Boolean boolCheckMailCount;
-        Uri mailUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
-        String idEmail = ContactsContract.CommonDataKinds.Email._ID;
-        String nameEmail = ContactsContract.CommonDataKinds.Email.DISPLAY_NAME;
-        String addressEmail = ContactsContract.CommonDataKinds.Email.ADDRESS;
-        Cursor contactMailCursor = getContentResolver().query(mailUri, new String[]{idEmail,nameEmail,addressEmail}, null, null, nameEmail+ " ASC");
-        boolCheckMailCount = contactMailCursor.getCount() > 0;
+        //Email part
+        Boolean testMails;
+        Uri uriMail = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
+        String idMailContact = ContactsContract.CommonDataKinds.Email._ID;
+        String displayNameEmailContact = ContactsContract.CommonDataKinds.Email.DISPLAY_NAME;
+        String emailContact = ContactsContract.CommonDataKinds.Email.ADDRESS;
+        Cursor cursorMailContacts = getContentResolver().query(uriMail, new String[]{idMailContact,displayNameEmailContact,emailContact}, null, null, displayNameEmailContact+ " ASC");
 
-
-        if (boolCheckInfosCount && boolCheckMailCount) {
-            while(contactInfosCursor.moveToNext()) {
+        testMails = cursorMailContacts.getCount() > 0;
+        contactInfosCursor.moveToFirst();
+        cursorMailContacts.moveToFirst();
+        if (boolCheckInfosCount && testMails ) {
+            for(Integer i = 1; i <= contactInfosCursor.getCount(); i++) {
                 Integer idContact = Integer.parseInt(contactInfosCursor.getString(0));
                 String nameContact = contactInfosCursor.getString(1);
                 String phoneContact = contactInfosCursor.getString(2);
-                String mailContact = "";
-                //Integer idMail = Integer.parseInt(contactMailCursor.getString(0));
-                //if (((idContact+1) == idMail) && (contactMailCursor.getString(2) != null )) {
-                    //mailContact = contactMailCursor.getString(2);
-                //}
+                String mailContact = null;
+                Integer idEmailContact = Integer.parseInt(cursorMailContacts.getString(0));
+                String mailContactTest = cursorMailContacts.getString(2);
 
-                contactList.add(new Contact(idContact, nameContact, phoneContact, null));
+                //Check les id des mails et des contacts pour coordonner les infos
+                if (((idContact+2) == idEmailContact) && (mailContactTest != null )) {
+                    mailContact = mailContactTest;
+                }
+
+                //Itère sur tous les contacts et tous les mails récupérés grâce aux curseurs
+                cursorMailContacts.moveToNext();
+                contactInfosCursor.moveToNext();
+                contactList.add(new Contact(idContact, nameContact, phoneContact, mailContact));
+
             }
 
             jsonContacts = gson.toJson(contactList);
             System.out.println(jsonContacts);
         }
+
 
         rememberedLogin = GlobalClass.getInstance().userLogin;
         rememberedPassword = GlobalClass.getInstance().userPassword;

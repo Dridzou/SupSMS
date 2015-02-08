@@ -29,6 +29,13 @@ import java.util.List;
 
 public class MenuActivity extends ActionBarActivity {
 
+    //Pour désactiver la possiblité de retourner sur la page de menu en appuyant
+    // sur la touche "back" quand on doit se loger
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,5 +1,6 @@
 package com.example.hugo.supsms;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -10,6 +11,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -47,6 +50,17 @@ public class SMSActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms);
 
+        Button buttonToMenu = (Button)findViewById(R.id.buttonBackToMenu);
+
+        buttonToMenu.setOnClickListener(
+            new Button.OnClickListener() {
+                public void onClick(View v) {
+                    Intent myIntent = new Intent(SMSActivity.this, MenuActivity.class);
+                    startActivityForResult(myIntent, 0);
+                }
+            }
+        );
+
         ArrayList<SMS> inboxList = new ArrayList<>();
         ArrayList<SMS> sentList = new ArrayList<>();
         Uri inboxUri = Uri.parse("content://sms/inbox");
@@ -56,36 +70,41 @@ public class SMSActivity extends ActionBarActivity {
         Cursor sentCursor = getContentResolver().query(sentUri, new String[]{"_id", "address", "date", "body"}, null, null, null);
         sentCursor.moveToFirst();
 
-        boolean boolCheckCount = inboxCursor.getCount() > 0; //
+        boolean boolCheckICount = inboxCursor.getCount() > 0;
+        boolean boolCheckSCount = sentCursor.getCount() > 0;
         Gson gson = new Gson();
 
-        if(boolCheckCount) {
-            while(inboxCursor.moveToNext()) {
+        inboxCursor.moveToFirst();
+        if(boolCheckICount) {
+            for(Integer i = 1; i <= inboxCursor.getCount(); i++) {
                 String smsIAddress = inboxCursor.getString(1);
                 String temp = inboxCursor.getString(3);
                 byte[] data = temp.getBytes();
                 String smsIBody = Base64.encodeToString(data, Base64.DEFAULT);
 
+                inboxCursor.moveToNext();
                 inboxList.add(new SMS(smsIAddress, smsIBody));
-
             }
 
             jsonInboxSMS = gson.toJson(inboxList);
+            System.out.println("INBOX : " + jsonInboxSMS);
             Log.d("debug: Number of SmsInbox", String.valueOf(inboxList.size()));
         }
 
-        if(sentCursor.getCount() > 0) {
-            while(sentCursor.moveToNext()) {
+        sentCursor.moveToFirst();
+        if(boolCheckSCount) {
+            for(Integer i = 1; i <= sentCursor.getCount(); i++) {
                 String smsSAddress = sentCursor.getString(1);
                 String temp = sentCursor.getString(3);
                 byte[] data = temp.getBytes();
                 String smsSBody = Base64.encodeToString(data, Base64.DEFAULT);
 
+                sentCursor.moveToNext();
                 sentList.add(new SMS(smsSAddress, smsSBody));
-
             }
 
             jsonSentSMS = gson.toJson(sentList);
+            System.out.println("SENT : " + jsonSentSMS);
             Log.d("debug: Number of SmsSent", String.valueOf(sentList.size()));
         }
 
